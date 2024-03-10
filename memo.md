@@ -38,6 +38,8 @@
     - Input: 
       - nodes: 巡回するN地点の[緯度, 経度]のリスト
       - dist: 距離行列（N×N行列．任意の2地点間の距離を格納）
+        - ユークリッド距離（直線距離）
+        - 車での移動距離（[Google Distance Matrix API](https://developers.google.com/optimization/routing/vrp?hl=ja#distance_matrix_api)で算出？）
     - Output: 
       - 総走行距離
       - 巡回する順序に並んだN地点のリスト
@@ -87,3 +89,7 @@
     - https://qiita.com/SaitoTsutomu/items/def581796ef079e85d02
   - 北海道内15箇所にポケモンマンホールが設置されるので最適経路を計算してみた
     - https://kiguchi999.hatenablog.com/entry/2019/12/08/%E5%8C%97%E6%B5%B7%E9%81%93%E5%86%8515%E7%AE%87%E6%89%80%E3%81%AB%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E3%81%8C%E8%A8%AD%E7%BD%AE%E3%81%95%E3%82%8C
+## Web Apps.
+- OR-Tools + folium（Pythonで地図を可視化するためのライブラリ） + streamlit
+  - ルート最適化の結果を地図上に表示するアプリをstreamlit.ioにデプロイした件
+    - https://zenn.dev/megane_otoko/articles/041_route_optimization
