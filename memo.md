@@ -24,10 +24,11 @@
   - 上記の要素を入力すると立ち寄りたいスポットや走りたい道をすべて通るルートを地図上に描画してくれるやつ
     - その後手動で良い感じにぶった切って全日程分のルート完成
 
-# Steps
+# Preliminaries
 - google maps APIを使ってみる
 - 経路探索アルゴリズムを実装してみる
   - すべての経由地点を通る最短経路を探索？
+- OR-Toolsを使ってみる
 - XXX
 
 # あーでもないこーでもない
@@ -46,6 +47,18 @@
   - であれば，経由する順序だけ最適化して（各地点をネットワークっぽく抽象化して），地点間のルートはgoogle先生に良い感じに引いてもらう？
 - 1日ごとに最適化問題を解く？
   - 地点A → 地点B → 地点C → ・・・と走行距離を累積していって，1日の走行距離下限～上限の間に入ったらストップ，みたいな
+- 案
+  - Step1. OR-Toolsを用いて巡回セールスマン問題を解く
+    - Input: 
+      - nodes: 巡回するN地点の[緯度, 経度]のリスト
+      - dist: 距離行列（N×N行列．任意の2地点間の距離を格納）
+    - Output: 
+      - 総走行距離
+      - 巡回する順序に並んだN地点のリスト
+    - 備考
+      - 求められるのはあくまでユークリッド距離での最短経路
+  - Step2. 可視化（Google Maps API？）
+    - Step1で得られた順序で各地点を巡るルートを描いてもらう？
 
 # Keywords
 - google maps API
@@ -53,5 +66,19 @@
   - routes API（二輪特化，高速回避，日本未対応？）
 
 # References
+## General
 - 【個人開発】Google Maps APIを利用して最適経路を提案するアプリ「Tabikochan」を作りました！
   - https://zenn.dev/lclco/articles/77d2af2e7bd24f
+
+## OR-Tools
+- 第6回：OR-Toolsで巡回セールスマン問題を解く ～京都弾丸観光ツアーの作成を事例に～【ブレインパッドの数理最適化ブログ】
+  - https://www.brainpad.co.jp/doors/contents/01_tech_2021-06-18-110000/
+- OR-Toolsで巡回セールスマン問題を解く
+  - https://qiita.com/SaitoTsutomu/items/ab9d657c49879df69928
+- OR-Toolsを使って巡回セールスマン問題を解き、効率的に沼津の聖地巡礼をする
+  - https://jpn.pioneer/ja/piomatixlbsapi/blog/or-tools/
+- ortoolpy, tsp
+  - 組合せ最適化 - 典型問題 - 巡回セールスマン問題
+    - https://qiita.com/SaitoTsutomu/items/def581796ef079e85d02
+  - 北海道内15箇所にポケモンマンホールが設置されるので最適経路を計算してみた
+    - https://kiguchi999.hatenablog.com/entry/2019/12/08/%E5%8C%97%E6%B5%B7%E9%81%93%E5%86%8515%E7%AE%87%E6%89%80%E3%81%AB%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E3%81%8C%E8%A8%AD%E7%BD%AE%E3%81%95%E3%82%8C
