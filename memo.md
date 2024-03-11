@@ -57,7 +57,9 @@
   - Step1. OR-Toolsを用いて巡回セールスマン問題を解く
     - Input: 
       - nodes: 巡回するN地点の[緯度, 経度]のリスト
-        - どのように地点 *i* の緯度・経度を取得するか（Google Maps API？）
+        - どのように地点 *i* の緯度・経度を取得するか
+          - Google Maps API
+          - geocoder, geopy
       - dist: 距離行列（N×N行列．任意の2地点間の距離を格納）
         - ユークリッド距離（直線距離）
         - 車での移動距離（[Google Distance Matrix API](https://developers.google.com/optimization/routing/vrp?hl=ja#distance_matrix_api)で算出？）
@@ -69,7 +71,12 @@
 ## Step2
 - 概要
   - Step1を拡張？
-    - 1日の走行距離目安？複数日程？etc..
+    - 制約追加？
+      - 1日の走行距離目安？複数日程？etc..
+  - ChatGPTにツーリングスポットをリストアップしてもらう
+    - ChatGPT API
+    - 緯度経度も出せそうだが正確かどうかは不明（特にマイナーな場所）
+  - foliumでストリートビューにアクセスできるようにする（[参考](https://www.youtube.com/watch?v=a9woRXmiy0s)）
 
 # Memo
 - 最適化問題を解けばよい？（巡回セールスマン問題的なアレ）
@@ -89,6 +96,10 @@
   - 地点A → 地点B → 地点C → ・・・と走行距離を累積していって，1日の走行距離下限～上限の間に入ったらストップ，みたいな
 
 # References
+## General
+- Python によるルート最適化の実践ガイド
+  - https://qiita.com/haystacker/items/67dfc76fd35b65eccd89
+
 ## Google Maps API
 - 【個人開発】Google Maps APIを利用して最適経路を提案するアプリ「Tabikochan」を作りました！
   - https://zenn.dev/lclco/articles/77d2af2e7bd24f
