@@ -134,3 +134,5 @@
 ## 緯度・経度取得
 - Pythonと国土地理院APIで施設名から緯度経度を一括取得してCSV出力
   - https://zenn.dev/yamadamadamada/articles/3fb198003c5428
+- Pythonで地名/住所から緯度/経度を取得し地図にプロットする方法
+  - https://qiita.com/daifuku10/items/0cd4a409417d3a7b7297
