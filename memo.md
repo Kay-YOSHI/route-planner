@@ -73,7 +73,7 @@
   - Step1を拡張？
     - 制約追加？
       - 1日の走行距離目安？複数日程？etc..
-  - ChatGPTにツーリングスポットをリストアップしてもらう
+  - ChatGPTにツーリングスポットをリストアップしてもらう（[参考](https://note.com/daybreak_diary/n/n79db44525c01)）
     - ChatGPT API
     - 緯度経度も出せそうだが正確かどうかは不明（特にマイナーな場所）
   - foliumでストリートビューにアクセスできるようにする（[参考](https://www.youtube.com/watch?v=a9woRXmiy0s)）
