@@ -109,17 +109,14 @@
   - https://developers.google.com/optimization/routing/tsp?hl=ja
 - 【〇】第6回：OR-Toolsで巡回セールスマン問題を解く ～京都弾丸観光ツアーの作成を事例に～【ブレインパッドの数理最適化ブログ】
   - https://www.brainpad.co.jp/doors/contents/01_tech_2021-06-18-110000/
-- 【〇】ortoolpy, tsp
+- 【〇】OR-Toolsを使って巡回セールスマン問題を解き、効率的に沼津の聖地巡礼をする
+  - https://jpn.pioneer/ja/piomatixlbsapi/blog/or-tools/
+  - 地点の情報（緯度・経度・地点名）から2地点間の直線距離を求め距離行列を作成してる
+- 【△】ortoolpy, tsp
   - 組合せ最適化 - 典型問題 - 巡回セールスマン問題
     - https://qiita.com/SaitoTsutomu/items/def581796ef079e85d02
   - 北海道内15箇所にポケモンマンホールが設置されるので最適経路を計算してみた
     - https://kiguchi999.hatenablog.com/entry/2019/12/08/%E5%8C%97%E6%B5%B7%E9%81%93%E5%86%8515%E7%AE%87%E6%89%80%E3%81%AB%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E3%81%8C%E8%A8%AD%E7%BD%AE%E3%81%95%E3%82%8C
-- Python+folium+openrouteserviceを使う (経路・時間行列・等時線を例に)
-  - https://zenn.dev/takilog/articles/2be029ccd35972
-- 【×】OR-Toolsで巡回セールスマン問題を解く
-  - https://qiita.com/SaitoTsutomu/items/ab9d657c49879df69928
-- 【×】OR-Toolsを使って巡回セールスマン問題を解き、効率的に沼津の聖地巡礼をする
-  - https://jpn.pioneer/ja/piomatixlbsapi/blog/or-tools/
 ## Web Apps.
 - OR-Tools + folium + streamlit
   - ルート最適化の結果を地図上に表示するアプリをstreamlit.ioにデプロイした件
