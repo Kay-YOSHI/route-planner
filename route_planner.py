@@ -28,41 +28,29 @@ def create_data_model():
     return data
 
 
-# solution printer
-def print_solution(manager, routing, solution):
-    """Prints solution on console."""
-    print(f"Objective: {solution.ObjectiveValue()} miles")
+# ルート（リスト）と総走行距離を取得
+def get_route_and_distance(solution, routing, manager):
+    # ドライバー#0 の開始インデックスを取得
     index = routing.Start(0)
-    plan_output = "Route for vehicle 0:\n"
-    route_distance = 0
+    # ルート（リスト），総走行距離
+    route_idx, route_distance = [], 0
+    # ルートの各ノードを走査
     while not routing.IsEnd(index):
-        plan_output += f" {manager.IndexToNode(index)} ->"
+        # 現在のインデックスに対応するノードをリストに追加
+        route_idx.append(manager.IndexToNode(index))
         previous_index = index
+        # 次のインデックスを取得
         index = solution.Value(routing.NextVar(index))
-        route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
-    plan_output += f" {manager.IndexToNode(index)}\n"
-    print(plan_output)
-    plan_output += f"Route distance: {route_distance}miles\n"
-
-
-# ルートをリストに保存
-def get_routes(solution, routing, manager):
-    """Get vehicle routes from a solution and store them in an array."""
-    # Get vehicle routes and store them in a two dimensional array whose
-    # i,j entry is the jth location visited by vehicle i along its route.
-    routes = []
-    for route_nbr in range(routing.vehicles()):
-        index = routing.Start(route_nbr)
-        route = [manager.IndexToNode(index)]
-        while not routing.IsEnd(index):
-            index = solution.Value(routing.NextVar(index))
-            route.append(manager.IndexToNode(index))
-        routes.append(route)
-    return routes
+        # 距離を取得し，ルートの総距離に加算
+        route_distance += routing.GetArcCostForVehicle(
+            from_index=previous_index, to_index=index, vehicle=0
+        )
+    return route_idx, route_distance
 
 
 def main():
     # データ生成
+    # TODO: データはpandas.dataFrameで持っとくか
     data = create_data_model()
 
     # Index Managerを作成
@@ -78,8 +66,8 @@ def main():
     # Routing Modelを作成
     routing = pywrapcp.RoutingModel(manager)
 
-    # 距離コールバック作成
-    # from_nodeからto_nodeへの移動コストをdistance_matrixから見つけるコールバック
+    # 距離コールバック（距離取得関数，距離コスト評価関数）作成
+    # from_nodeからto_nodeへの移動（距離）コストをdistance_matrixから見つけるコールバック
     # コールバック関数：ある関数を呼び出すときに引数に指定する別の関数
     def distance_callback(from_index, to_index):
         """Returns the distance between the two nodes."""
@@ -88,20 +76,21 @@ def main():
         to_node = manager.IndexToNode(to_index)
         return data["distance_matrix"][from_node][to_node]
 
-    # 距離コールバックをソルバーに登録
+    # 距離コールバックをRouting Modelに登録
     transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 
-    # Arc Costの設定
-    # 2地点間の移動コスト（ここでは距離そのもの）
+    # すべての車両に距離コスト評価関数を設定
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-    # いろいろ設定を追加できるっぽい
+    # MEMO: いろいろ設定（制約条件）を追加できるっぽい
 
-    # 解法の設定
+    # デフォルトのルーティング検索パラメータを取得
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
 
-    # first_solution_strategy（初期解の求め方）
-    # PATH_CHEAPEST_ARC: 今いる地点から最短距離の地点にルートをつないでいくイメージ
+    # 初期解を生成する戦略（first_solution_strategy）を設定
+    # PATH_CHEAPEST_ARC:
+    # ・最もコストの低いアーク（経路のセグメント）を選択する戦略
+    # ・今いる地点から最短距離の地点にルートをつないでいくイメージ
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
     )
@@ -109,14 +98,14 @@ def main():
     # 最適化実行
     solution = routing.SolveWithParameters(search_parameters)
 
-    # 解が見つかれば表示
-    if solution:
-        print_solution(manager, routing, solution)
-    else:
-        print("NO SOLUTION FOUND")
+    # 最適ルートと総走行距離を取得
+    optimal_route, optimal_distance = get_route_and_distance(solution, routing, manager)
+    print(f"Route: {optimal_route}")
+    print(f"Total Distance: {optimal_distance} miles")
 
-    # 巡回する順序に並んだ地点のリスト
-    optimal_routes = get_routes(solution, routing, manager)[0]
+    # TODO:
+    # optimal_routes（インデックスのリスト）をノードのリストに変換
+    # 任意の2ノード間の最短経路を算出し，地図上にルートを描画
 
 
 if __name__ == "__main__":
