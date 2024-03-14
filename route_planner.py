@@ -254,6 +254,7 @@ def get_route_and_distance(solution, routing, manager):
 
 def main():
     # データ生成
+    # TODO: 地点名入力⇒緯度経度取得⇒リストに格納
     # data = create_data_model()
     dtf_list = [
         [0, "自宅", 35.853237566583864, 139.52565241326212],
