@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_bdf46df2d6c2a14849644d028c5ae797 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_bdf46df2d6c2a14849644d028c5ae797" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_bdf46df2d6c2a14849644d028c5ae797 = L.map(
+                "map_bdf46df2d6c2a14849644d028c5ae797",
+                {
+                    center: [35.853237566583864, 139.52565241326212],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 13,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3df9e676a3cbe617c52034bfb6c948f8 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_3df9e676a3cbe617c52034bfb6c948f8.addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var marker_ee5352a4a1d098f709533d449771403a = L.marker(
+                [35.853237566583864, 139.52565241326212],
+                {"fill": true, "radius": 10}
+            ).addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var icon_054aa427d659cdb82e55813f398949c6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "map-marker", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ee5352a4a1d098f709533d449771403a.setIcon(icon_054aa427d659cdb82e55813f398949c6);
+        
+    
+            marker_ee5352a4a1d098f709533d449771403a.bindTooltip(
+                `<div>
+                     自宅
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_aa5051c0360c63561eb979adfe82ba89 = L.marker(
+                [35.89021146717185, 139.570908903868],
+                {"fill": true, "radius": 10}
+            ).addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var icon_c5ff562fc4be6d7b34a7a895595b0870 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "map-marker", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_aa5051c0360c63561eb979adfe82ba89.setIcon(icon_c5ff562fc4be6d7b34a7a895595b0870);
+        
+    
+            marker_aa5051c0360c63561eb979adfe82ba89.bindTooltip(
+                `<div>
+                     大宮けんぽグラウンド
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_773adecae8ec2ed0832c4b7604794faa = L.marker(
+                [35.85995667233151, 139.5483715641925],
+                {"fill": true, "radius": 10}
+            ).addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var icon_84666c2ad8e6aff4a95f7feb138eecd5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "map-marker", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_773adecae8ec2ed0832c4b7604794faa.setIcon(icon_84666c2ad8e6aff4a95f7feb138eecd5);
+        
+    
+            marker_773adecae8ec2ed0832c4b7604794faa.bindTooltip(
+                `<div>
+                     ららぽーと富士見
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a8d463b0066db3cbfe4dfe03bc6546dc = L.marker(
+                [35.88316939483739, 139.52213157793798],
+                {"fill": true, "radius": 10}
+            ).addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var icon_ea7d885690a912026e4c29e7df0edda5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "map-marker", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a8d463b0066db3cbfe4dfe03bc6546dc.setIcon(icon_ea7d885690a912026e4c29e7df0edda5);
+        
+    
+            marker_a8d463b0066db3cbfe4dfe03bc6546dc.bindTooltip(
+                `<div>
+                     イオンタウンふじみ野
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var tile_layer_795e513af68ebbf8b6a39d51cbb14979 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abcd", "tms": false}
+            );
+        
+    
+            tile_layer_795e513af68ebbf8b6a39d51cbb14979.addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            var tile_layer_360efce5a7705627ed4bd3ec72fd2cf7 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_360efce5a7705627ed4bd3ec72fd2cf7.addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": true, "position": "topright", "title": "\u5c55\u958b", "titleCancel": "\u9000\u51fa"}
+            ).addTo(map_bdf46df2d6c2a14849644d028c5ae797);
+        
+</script>
+</html>

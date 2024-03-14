@@ -1,10 +1,23 @@
 """Simple Travelling Salesperson Problem (TSP) between cities."""
 
-from ortools.constraint_solver import pywrapcp
-from ortools.constraint_solver import routing_enums_pb2
+import pandas as pd
+import numpy as np
+import sklearn.preprocessing as sp
+from sklearn.preprocessing import MinMaxScaler
+
+import folium  # Leaflet.js を使用した地理空間データの可視化
+from folium import plugins  # folium ライブラリのための追加機能やプラグインを提供
+
+from ortools.constraint_solver import (
+    pywrapcp,
+)  # OR-Tools で、制約プログラミングをサポートする Python ラッパー
+from ortools.constraint_solver import (
+    routing_enums_pb2,
+)  # OR-Tools で、ルーティング問題に関連する列挙型と定数を提供するモジュール
 
 
 # データ生成
+'''
 def create_data_model():
     """Stores the data for the problem."""
     data = {}
@@ -26,6 +39,197 @@ def create_data_model():
     data["num_vehicles"] = 1
     data["depot"] = 0  # ルートの始点と終点
     return data
+'''
+
+"""
+folium でマップを作成する。
+:パラメータ
+    param dtf: pandas
+    param (y,x): str - (緯度，経度) を要素とする列
+    param starting_point: list - (緯度，経度) を指定
+    param tiles: str - "cartodbpositron", "OpenStreetMap", "Stamen Terrain", "Stamen Toner".
+    param popup: str - クリックされたときにポップアップするテキストを指定する列
+    :param size: str - サイズを変数で指定する列，None の場合は size=5 となる
+    :param color: str - 変数 color を指定する列，None の場合はデフォルトの色になる
+    :param lst_colors: list - 色の列が None でない場合に利用される、複数の色のリスト
+    param marker: str - 変数 marker を指定する列，最大 7 個のユニークな値を取る
+:戻り値
+    表示するマップオブジェクト
+"""
+
+
+def plot_map(
+    dtf,
+    y,
+    x,
+    start,
+    zoom=12,
+    tiles="openstreetmap",
+    popup=None,
+    size=None,
+    color=None,
+    legend=False,
+    lst_colors=None,
+    marker=None,
+):
+
+    data = dtf.copy()
+
+    ## プロットのためのカラムを作成
+    if color is not None:
+        lst_elements = sorted(list(dtf[color].unique()))
+        lst_colors = (
+            ["#%06X" % np.random.randint(0, 0xFFFFFF) for i in range(len(lst_elements))]
+            if lst_colors is None
+            else lst_colors
+        )
+        data["color"] = data[color].apply(lambda x: lst_colors[lst_elements.index(x)])
+
+    if size is not None:
+        scaler = sp.MinMaxScaler(feature_range=(3, 15))
+        data["size"] = scaler.fit_transform(data[size].values.reshape(-1, 1)).reshape(
+            -1
+        )
+
+    ## マップ
+    map_ = folium.Map(location=start, tiles=tiles, zoom_start=zoom)
+
+    # if marker is None
+    if (size is not None) and (color is None):
+        data.apply(
+            lambda row: folium.CircleMarker(
+                location=[row[y], row[x]],
+                popup=row[popup],
+                color="#3186cc",
+                fill=True,
+                radius=row["size"],
+            ).add_to(map_),
+            axis=1,
+        )
+    elif (size is None) and (color is not None):
+        data.apply(
+            lambda row: folium.Marker(
+                location=[row[y], row[x]],
+                # popup=row[popup],
+                tooltip=row[popup],
+                # color=row["color"],
+                icon=folium.Icon(color=row["color"], icon="map-marker"),
+                fill=True,
+                radius=10,
+            ).add_to(map_),
+            axis=1,
+        )
+    elif (size is not None) and (color is not None):
+        data.apply(
+            lambda row: folium.CircleMarker(
+                location=[row[y], row[x]],
+                popup=row[popup],
+                color=row["color"],
+                fill=True,
+                radius=row["size"],
+            ).add_to(map_),
+            axis=1,
+        )
+    else:
+        data.apply(
+            lambda row: folium.CircleMarker(
+                location=[row[y], row[x]],
+                popup=row[popup],
+                color="#3186cc",
+                fill=True,
+                radius=10,
+            ).add_to(map_),
+            axis=1,
+        )
+
+    print(data)
+
+    ## tiles
+    # タイルセットを追加
+    layers = {
+        "cartodbpositron": None,  # 組み込みレイヤー
+        "openstreetmap": None,  # 組み込みレイヤー
+        # "Stamen Terrain": "http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg",
+        # "Stamen Water Color": "http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg",
+        # "Stamen Toner": "http://tile.stamen.com/toner/{z}/{x}/{y}.png",
+        # "cartodbdark_matter": None,  # 組み込みレイヤー
+    }
+
+    # タイルレイヤーをマップに追加するループ
+    for name, url in layers.items():
+        if url:
+            # カスタムタイルレイヤーを追加
+            folium.TileLayer(
+                tiles=url,
+                attr="Map data © OpenStreetMap contributors, Stamen Design",
+                name=name,
+            ).add_to(map_)
+        else:
+            # 組み込みタイルレイヤーを追加
+            folium.TileLayer(name).add_to(map_)
+
+    ## 凡例
+    if (color is not None) and (legend is True):
+        legend_html = (
+            """<div style="position:fixed; bottom:10px; left:10px; border:2px solid black; z-index:9999; font-size:14px;">&nbsp;<b>"""
+            + color
+            + """:</b><br>"""
+        )
+        for i in lst_elements:
+            legend_html = (
+                legend_html
+                + """&nbsp;<i class="fa fa-circle fa-1x" style="color:"""
+                + lst_colors[lst_elements.index(i)]
+                + """"></i>&nbsp;"""
+                + str(i)
+                + """<br>"""
+            )
+        legend_html = legend_html + """</div>"""
+        map_.get_root().html.add_child(folium.Element(legend_html))
+
+    ## マーカーの追加
+    """
+    if marker is not None:
+        lst_elements = sorted(list(dtf[marker].unique()))
+        lst_colors = ["yellow", "red", "blue", "green", "pink", "orange", "gray"]  # 7
+        ### 値が多すぎてマークできない場合
+        if len(lst_elements) > len(lst_colors):
+            raise Exception(
+                "マーカーの一意な値が " + str(len(lst_colors)) + " 個を超えています"
+            )
+        ### 二値のケース（1/0）: 1だけをマーク
+        elif len(lst_elements) == 2:
+            data[data[marker] == lst_elements[1]].apply(
+                lambda row: folium.Marker(
+                    location=[row[y], row[x]],
+                    popup=row[marker],
+                    draggable=False,
+                    icon=folium.Icon(color=lst_colors[0]),
+                ).add_to(map_),
+                axis=1,
+            )
+        ### 通常のケース：全ての値をマーク
+        else:
+            for i in lst_elements:
+                data[data[marker] == i].apply(
+                    lambda row: folium.Marker(
+                        location=[row[y], row[x]],
+                        popup=row[marker],
+                        draggable=False,
+                        icon=folium.Icon(color=lst_colors[lst_elements.index(i)]),
+                    ).add_to(map_),
+                    axis=1,
+                )
+    """
+
+    ## フルスクリーン
+    plugins.Fullscreen(
+        position="topright",
+        title="展開",
+        title_cancel="退出",
+        force_separate_button=True,
+    ).add_to(map_)
+    return map_
 
 
 # ルート（リスト）と総走行距離を取得
@@ -50,9 +254,38 @@ def get_route_and_distance(solution, routing, manager):
 
 def main():
     # データ生成
-    # TODO: データはpandas.dataFrameで持っとくか
-    data = create_data_model()
+    # data = create_data_model()
+    dtf_list = [
+        [0, "自宅", 35.853237566583864, 139.52565241326212],
+        [1, "大宮けんぽグラウンド", 35.89021146717185, 139.570908903868],
+        [2, "ららぽーと富士見", 35.85995667233151, 139.5483715641925],
+        [3, "イオンタウンふじみ野", 35.88316939483739, 139.52213157793798],
+    ]
+    cols = ["id", "Name", "y", "x"]  # y: 緯度, x: 経度
+    dtf = pd.DataFrame(data=dtf_list, columns=cols)
 
+    # 基点となる場所の設定
+    i = 0  # id=0の地点を基点とする
+    dtf["base"] = dtf["id"].apply(lambda x: 1 if x == i else 0)
+    start = dtf[dtf["base"] == 1][["y", "x"]].values
+    print(f"start = {start}")
+    print(dtf.head())
+
+    # 地図上に地点を表示
+    map_ = plot_map(
+        dtf,
+        y="y",
+        x="x",
+        start=start,
+        zoom=13,
+        tiles="openstreetmap",
+        popup="Name",
+        color="base",
+        lst_colors=["blue", "red"],
+    )
+    map_.save("map.html")  # map.htmlをブラウザで開けば地図が見られる
+
+    '''
     # Index Managerを作成
     # nodeとindexの紐づけを管理してくれるもの
     # node: 我々が認識している地点番号
@@ -106,6 +339,7 @@ def main():
     # TODO:
     # optimal_routes（インデックスのリスト）をノードのリストに変換
     # 任意の2ノード間の最短経路を算出し，地図上にルートを描画
+    '''
 
 
 if __name__ == "__main__":
