@@ -106,6 +106,7 @@
   - それができれば各車両の走行距離に上限を設けて，日程数分の台数で回ればよい？
   - N番目の車両のend地点＝N+1番目の車両のstart地点？
   - 結局1日ごとの最適化になりそう
+- あるいは1台がmultiple daysに渡って巡回？（[参考](https://stackoverflow.com/questions/65028943/google-or-tools-tsp-spanning-multiple-days-with-start-stop-times)）
 
 # References
 ## General
