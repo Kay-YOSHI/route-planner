@@ -132,9 +132,11 @@
   - 北海道内15箇所にポケモンマンホールが設置されるので最適経路を計算してみた
     - https://kiguchi999.hatenablog.com/entry/2019/12/08/%E5%8C%97%E6%B5%B7%E9%81%93%E5%86%8515%E7%AE%87%E6%89%80%E3%81%AB%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E3%81%8C%E8%A8%AD%E7%BD%AE%E3%81%95%E3%82%8C
 ## Web Apps.
-- OR-Tools + folium + streamlit
-  - ルート最適化の結果を地図上に表示するアプリをstreamlit.ioにデプロイした件
-    - https://zenn.dev/megane_otoko/articles/041_route_optimization
+- streamlit
+  - Streamlitで自由に入力フォームを追加/削除できるUIを実現する
+    - https://qiita.com/nockn/items/15e081b58e02a0878855
+  - Streamlitで追加・削除ができる動的なユーザ入力を実装する方法
+    - https://qiita.com/sypn/items/2abf4287781d161c2e29
 - streamlit-folium
   - 公式
     - https://folium.streamlit.app/
@@ -142,6 +144,9 @@
     - https://zenn.dev/iwatagumi/articles/e6b57ff3730fb4
   - Streamlitでstreamlit-foliumを使って地図に情報を表示してみよう
     - https://welovepython.net/streamlit-folium/
+- OR-Tools + folium + streamlit
+  - ルート最適化の結果を地図上に表示するアプリをstreamlit.ioにデプロイした件
+    - https://zenn.dev/megane_otoko/articles/041_route_optimization
 ## 緯度・経度取得
 - Pythonと国土地理院APIで施設名から緯度経度を一括取得してCSV出力
   - https://zenn.dev/yamadamadamada/articles/3fb198003c5428
