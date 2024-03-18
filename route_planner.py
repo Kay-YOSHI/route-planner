@@ -6,6 +6,8 @@ import sklearn.preprocessing as sp
 from sklearn.preprocessing import MinMaxScaler
 import time
 
+import streamlit as st
+from streamlit_folium import st_folium
 import folium  # Leaflet.js を使用した地理空間データの可視化
 from folium import plugins  # folium ライブラリのための追加機能やプラグインを提供
 
@@ -17,32 +19,6 @@ from ortools.constraint_solver import (
 from ortools.constraint_solver import (
     routing_enums_pb2,
 )  # OR-Tools で、ルーティング問題に関連する列挙型と定数を提供するモジュール
-
-
-# データ生成
-'''
-def create_data_model():
-    """Stores the data for the problem."""
-    data = {}
-    data["distance_matrix"] = [
-        [0, 2451, 713, 1018, 1631, 1374, 2408, 213, 2571, 875, 1420, 2145, 1972],
-        [2451, 0, 1745, 1524, 831, 1240, 959, 2596, 403, 1589, 1374, 357, 579],
-        [713, 1745, 0, 355, 920, 803, 1737, 851, 1858, 262, 940, 1453, 1260],
-        [1018, 1524, 355, 0, 700, 862, 1395, 1123, 1584, 466, 1056, 1280, 987],
-        [1631, 831, 920, 700, 0, 663, 1021, 1769, 949, 796, 879, 586, 371],
-        [1374, 1240, 803, 862, 663, 0, 1681, 1551, 1765, 547, 225, 887, 999],
-        [2408, 959, 1737, 1395, 1021, 1681, 0, 2493, 678, 1724, 1891, 1114, 701],
-        [213, 2596, 851, 1123, 1769, 1551, 2493, 0, 2699, 1038, 1605, 2300, 2099],
-        [2571, 403, 1858, 1584, 949, 1765, 678, 2699, 0, 1744, 1645, 653, 600],
-        [875, 1589, 262, 466, 796, 547, 1724, 1038, 1744, 0, 679, 1272, 1162],
-        [1420, 1374, 940, 1056, 879, 225, 1891, 1605, 1645, 679, 0, 1017, 1200],
-        [2145, 357, 1453, 1280, 586, 887, 1114, 2300, 653, 1272, 1017, 0, 504],
-        [1972, 579, 1260, 987, 371, 999, 701, 2099, 600, 1162, 1200, 504, 0],
-    ]  # 距離は整数
-    data["num_vehicles"] = 1
-    data["depot"] = 0  # ルートの始点と終点
-    return data
-'''
 
 
 # map作成
@@ -58,7 +34,6 @@ def plot_map(
     color=None,
     legend=False,
     lst_colors=None,
-    marker=None,
 ):
     """
     folium でマップを作成する。
@@ -95,7 +70,11 @@ def plot_map(
         )
 
     ## マップ
-    map_ = folium.Map(location=start, tiles=tiles, zoom_start=zoom)
+    map_ = folium.Map(
+        location=start,  # 地図の中心位置
+        tiles=tiles,  # タイル
+        zoom_start=zoom,  # ズームレベル
+    )
 
     # if marker is None
     if (size is not None) and (color is None):
@@ -188,41 +167,6 @@ def plot_map(
         legend_html = legend_html + """</div>"""
         map_.get_root().html.add_child(folium.Element(legend_html))
 
-    ## マーカーの追加
-    """
-    if marker is not None:
-        lst_elements = sorted(list(dtf[marker].unique()))
-        lst_colors = ["yellow", "red", "blue", "green", "pink", "orange", "gray"]  # 7
-        ### 値が多すぎてマークできない場合
-        if len(lst_elements) > len(lst_colors):
-            raise Exception(
-                "マーカーの一意な値が " + str(len(lst_colors)) + " 個を超えています"
-            )
-        ### 二値のケース（1/0）: 1だけをマーク
-        elif len(lst_elements) == 2:
-            data[data[marker] == lst_elements[1]].apply(
-                lambda row: folium.Marker(
-                    location=[row[y], row[x]],
-                    popup=row[marker],
-                    draggable=False,
-                    icon=folium.Icon(color=lst_colors[0]),
-                ).add_to(map_),
-                axis=1,
-            )
-        ### 通常のケース：全ての値をマーク
-        else:
-            for i in lst_elements:
-                data[data[marker] == i].apply(
-                    lambda row: folium.Marker(
-                        location=[row[y], row[x]],
-                        popup=row[marker],
-                        draggable=False,
-                        icon=folium.Icon(color=lst_colors[lst_elements.index(i)]),
-                    ).add_to(map_),
-                    axis=1,
-                )
-    """
-
     ## フルスクリーン
     plugins.Fullscreen(
         position="topright",
@@ -230,17 +174,17 @@ def plot_map(
         title_cancel="退出",
         force_separate_button=True,
     ).add_to(map_)
+
     return map_
 
 
-def main():
+def main(map_col, spot_list):
 
     # 時間計測開始
     start_time = time.perf_counter()
 
     # データ生成
-    # TODO: (streamlit)地点名入力⇒緯度経度取得⇒リストに格納
-    # data = create_data_model()
+    # TODO: spot_list（入力された地点のlist）の地点名or住所について緯度経度取得⇒dtf_listを作る
     dtf_list = [
         [0, "自宅", 35.853237566583864, 139.52565241326212],
         [1, "ららぽーと富士見", 35.85995667233151, 139.5483715641925],
@@ -256,22 +200,6 @@ def main():
     # end = start  # 終点＝始点とする
     # print(f"From: {start} --> To: {end}")
     # print(dtf.head())
-
-    # 地図上に地点を表示
-    """
-    map_ = plot_map(
-        dtf,
-        y="y",
-        x="x",
-        start=start,
-        zoom=13,
-        tiles="openstreetmap",
-        popup="Name",
-        color="base",
-        lst_colors=["blue", "red"],
-    )
-    map_.save("map.html")  # map.htmlをブラウザで開けば地図が見られる
-    """
 
     # ネットワークグラフの作成
     # - 'start'の位置から半径10000メートル以内の道路ネットワークを取得
@@ -446,16 +374,66 @@ def main():
     )
     for path in lst_paths:
         ox.plot_route_folium(G, route=path, route_map=map_, color="red", weight=2)
-    map_.save("optimal_route.html")  # map.htmlをブラウザで開けば地図が見られる
 
     # 時間計測終了
     end_time = time.perf_counter()
 
-    # Results
-    print(f"Route: {optimal_route}")
-    print(f"Total Distance: {round(optimal_distance/1000, 2)} km")
-    print(f"Computation time: {'{:.2f}'.format((end_time-start_time)/60)} min.")
+    # streamlit
+    # TODO:optimal_routeを表示させるなら地点名が良いか（IndexToName？）
+    with map_col:
+        st.write(f"Total Distance: {round(optimal_distance/1000, 2)} km")  # 総走行距離
+        st_folium(map_, width=1400, height=600, returned_objects=[])
+        # st.write(f"Route: {optimal_route}) # 最適経路
+        # st.write(f"Computation time: {'{:.2f}'.format((end_time-start_time)/60)} min.") # 計算時間
 
 
 if __name__ == "__main__":
-    main()
+
+    # streamlit
+    # to view Streamlit app on a browser, run it with the following command:
+    # streamlit run C:\Users\ksk01\Git\route-planner\route_planner.py
+
+    # streamlit: ページ設定
+    st.set_page_config(page_title="Route-Planner", page_icon="🏍️", layout="wide")
+
+    # タイトル
+    st.title("Route-Planner")
+
+    # 画面を分割
+    placeholder = st.empty()
+    menu_col, map_col = placeholder.columns([1, 4])
+
+    with menu_col:
+
+        # 入力フォーム
+        if "list" not in st.session_state:
+            st.session_state.list = [0]
+
+        with st.form("form"):
+            st_input_area = st.container()
+            st_add_button_area = st.container()
+
+            if st_add_button_area.form_submit_button(label="ADD FORM"):
+                st.session_state.list.append(0)
+
+            if st_add_button_area.form_submit_button(label="REMOVE FORM"):
+                del st.session_state.list[-1]
+
+            for i in range(len(st.session_state.list)):
+                if i == 0:
+                    st.session_state.list[i] = st_input_area.text_input(
+                        f"Starting Point", key=i
+                    )
+                else:
+                    st.session_state.list[i] = st_input_area.text_input(
+                        f"Waypoint {i}", key=i
+                    )
+
+            is_calc = st.form_submit_button(label="COMPUTE")
+
+        if is_calc:
+
+            # 巡回する地点リスト
+            spot_list = st.session_state.list
+            # 実行
+            main(map_col, spot_list)
