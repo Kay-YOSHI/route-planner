@@ -11,6 +11,7 @@ from streamlit_folium import st_folium
 import folium  # Leaflet.js を使用した地理空間データの可視化
 from folium import plugins  # folium ライブラリのための追加機能やプラグインを提供
 
+import geocoder
 import osmnx as ox  # OpenStreetMap のデータを取得、構築、分析し、ネットワーク分析を行う
 import networkx as nx  # 複雑なネットワークの作成、操作、研究の用途
 from ortools.constraint_solver import (
@@ -181,15 +182,24 @@ def plot_map(
 def main(map_col, spot_list):
 
     # 時間計測開始
-    start_time = time.perf_counter()
+    # start_time = time.perf_counter()
 
     # データ生成
-    # TODO: spot_list（入力された地点のlist）の地点名or住所について緯度経度取得⇒dtf_listを作る
-    dtf_list = [
-        [0, "自宅", 35.853237566583864, 139.52565241326212],
-        [1, "ららぽーと富士見", 35.85995667233151, 139.5483715641925],
-        [2, "イオンタウンふじみ野", 35.88316939483739, 139.52213157793798],
-    ]
+    # TODO: マイナー？な地名を入れるとTypeErrorが出る
+    # --> TypeError: 'NoneType' object is not subscriptable
+    dtf_list = []
+    spot_counter = 0
+    for i in range(len(spot_list)):
+        # 緯度経度が取得できない地名が入力されたときは，その地点をskipする
+        try:
+            ret = geocoder.osm(spot_list[i], timeout=5.0)  # 緯度経度取得
+            tmp = [spot_counter, spot_list[i], ret.latlng[0], ret.latlng[1]]
+            dtf_list.append(tmp)
+            spot_counter = spot_counter + 1
+        except TypeError:
+            pass
+    print(dtf_list)
+
     cols = ["id", "Name", "y", "x"]  # y: 緯度, x: 経度
     dtf = pd.DataFrame(data=dtf_list, columns=cols)
 
@@ -376,7 +386,7 @@ def main(map_col, spot_list):
         ox.plot_route_folium(G, route=path, route_map=map_, color="red", weight=2)
 
     # 時間計測終了
-    end_time = time.perf_counter()
+    # end_time = time.perf_counter()
 
     # streamlit
     # TODO:optimal_routeを表示させるなら地点名が良いか（IndexToName？）
