@@ -190,7 +190,7 @@ def main(map_col, spot_list):
     dtf_list = []
     spot_counter = 0
     for i in range(len(spot_list)):
-        # 緯度経度が取得できない地名が入力されたときは，その地点をskipする
+        # 緯度経度が取得できない地点名が入力されたときは，その地点をskipする
         try:
             ret = geocoder.osm(spot_list[i], timeout=5.0)  # 緯度経度取得
             tmp = [spot_counter, spot_list[i], ret.latlng[0], ret.latlng[1]]
@@ -198,7 +198,7 @@ def main(map_col, spot_list):
             spot_counter = spot_counter + 1
         except TypeError:
             pass
-    print(dtf_list)
+    # print(dtf_list)
 
     cols = ["id", "Name", "y", "x"]  # y: 緯度, x: 経度
     dtf = pd.DataFrame(data=dtf_list, columns=cols)
@@ -408,6 +408,28 @@ if __name__ == "__main__":
 
     # タイトル
     st.title("Route-Planner")
+
+    # 背景
+    # image = "https://images.unsplash.com/photo-1542281286-9e0a16bb7366"
+    # image = (
+    #    "http://drive.google.com/uc?export=view&id=1DPu0tE3WiJqcOIQtR0nngMD2q1n8pT48"
+    # )
+    # image = "https://images.unsplash.com/photo-1557159557-7a93eaadf72a?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    image = "https://images.unsplash.com/photo-1559598310-3dfb3528274f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    css = f"""
+    <style>
+        .stApp {{
+            background-image: url({image});
+            background-size: cover;
+            background-position: center;
+            background-color:rgba(255,255,255,0.4);
+        }}
+        .stApp > header {{
+            background-color: transparent;
+        }}
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
 
     # 画面を分割
     placeholder = st.empty()
