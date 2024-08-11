@@ -412,10 +412,10 @@ if __name__ == "__main__":
     # 背景
     # image = "https://images.unsplash.com/photo-1542281286-9e0a16bb7366"
     # image = (
-    #    "http://drive.google.com/uc?export=view&id=1DPu0tE3WiJqcOIQtR0nngMD2q1n8pT48"
+    #     "http://drive.google.com/uc?export=view&id=1DPu0tE3WiJqcOIQtR0nngMD2q1n8pT48"
     # )
-    # image = "https://images.unsplash.com/photo-1557159557-7a93eaadf72a?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    image = "https://images.unsplash.com/photo-1559598310-3dfb3528274f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    image = "https://images.unsplash.com/photo-1557159557-7a93eaadf72a?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    # image = "https://images.unsplash.com/photo-1559598310-3dfb3528274f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     css = f"""
     <style>
         .stApp {{
